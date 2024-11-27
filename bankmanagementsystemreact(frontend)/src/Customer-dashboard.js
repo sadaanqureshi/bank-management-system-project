@@ -1,42 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import CustomerDetails from './CustomerDetails';
-import MenuCard from './MenuCard';
+import axios from 'axios';
 import './Customer-dashboard.css';
+import MenuCard from './MenuCard';
 
 const CustomerHome = () => {
-  // Example customer data
-  const customer = {
-    accountNumber: '1234567890',
-    accountType: 'Savings',
-    balance: 25000,
-  };
-
+  const [customer, setCustomer] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCustomerDetails = async () => {
+      const customerID = localStorage.getItem('customerID'); // Retrieve the logged-in customer's ID
+      if (!customerID) {
+        alert('You need to log in first!');
+        navigate('/login');
+        return;
+      }
+
+      try {
+        const response = await axios.get(`http://localhost:5010/api/v1/customers/${customerID}`);
+        if (response.data.success) {
+          setCustomer(response.data.data); // Set customer data
+        } else {
+          alert('Failed to fetch customer details');
+        }
+      } catch (error) {
+        console.error('Error fetching customer details:', error);
+        alert('Error fetching customer details');
+      }
+    };
+
+    fetchCustomerDetails();
+  }, [navigate]);
 
   const navigateToService = (service) => {
     navigate(`/${service}`);
   };
 
+  if (!customer) {
+    return <div>Loading...</div>; // Show a loading state while fetching data
+  }
+
   return (
     <div className="customer-dashboard-container">
-      {/* Header Section */}
       <header className="customer-dashboard-header">
-        <h1>Welcome, [Customer Name]</h1>
+        <h1>Welcome, {customer.FirstName} {customer.LastName}</h1>
         <p>Your personalized dashboard</p>
       </header>
 
-      {/* Main Content */}
       <div className="content-container">
-        {/* Account Details Section */}
         <div className="account-details-card">
           <h3>Account Details</h3>
-          <p><strong>Account Number:</strong> {customer.accountNumber}</p>
-          <p><strong>Account Type:</strong> {customer.accountType}</p>
-          <p><strong>Balance:</strong> ${customer.balance.toLocaleString()}</p>
+          <p><strong>Account Number:</strong> {customer.CustomerID}</p>
+          <p><strong>Account Type:</strong> {customer.AccountType || 'Not Available'}</p>
+          <p><strong>Balance:</strong> ₹{customer.Balance?.toLocaleString() || '0'}</p>
+          <p><strong>Email:</strong> {customer.Email}</p>
+          <p><strong>Phone:</strong> {customer.Phone}</p>
         </div>
 
-        {/* Services Menu Section */}
         <div className="buttons-card">
           <h3>Actions</h3>
           <div className="menu-card-grid">
