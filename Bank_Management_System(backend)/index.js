@@ -25,7 +25,7 @@ app.use('/api/v1/employees', require("./routes/employeesRoutes"));
 app.use('/api/v1/accountcards', require("./routes/accountCardsRoutes"));
 app.use('/api/v1/customerqueries', require("./routes/customerQueriesRoutes"));
 app.use('/api/v1/auth', require("./routes/authRoutes"));
-
+app.use('/api/v1/admin',require("./routes/adminRoutes"));
 app.get('/', function (req, res) {
   res.send('Hello World');
 });
