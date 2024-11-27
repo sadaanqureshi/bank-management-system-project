@@ -1,0 +1,133 @@
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: 'Roboto', Arial, sans-serif;
+  background: linear-gradient(135deg, #74ebd5, #9face6);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns dashboard content at the top */
+  overflow-y: auto; /* Allows scrolling if content overflows */
+  padding: 20px;
+}
+
+/* Dashboard Container */
+.customer-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  gap: 20px;
+}
+
+/* Header Section */
+.customer-dashboard-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.customer-dashboard-header p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* Content Section */
+.content-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  gap: 20px;
+  width: 100%;
+}
+
+/* Account Details Card */
+.account-details-card {
+  background: linear-gradient(135deg, #4a90e2, #007aff); /* Themed gradient */
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.account-details-card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.account-details-card p {
+  font-size: 1rem;
+}
+
+/* Buttons Card */
+.buttons-card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.buttons-card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.button {
+  font-size: 1rem;
+  padding: 15px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  text-align: center;
+}
+
+.button:hover {
+  background: #007aff;
+  transform: translateY(-3px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-container {
+    grid-template-columns: 1fr; /* Stack the cards vertically */
+  }
+
+  .account-details-card,
+  .buttons-card {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .customer-dashboard-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .customer-dashboard-header p {
+    font-size: 0.9rem;
+  }
+
+  .account-details-card h3,
+  .buttons-card h3 {
+    font-size: 1.5rem;
+  }
+
+  .button {
+    font-size: 0.9rem;
+  }
+}

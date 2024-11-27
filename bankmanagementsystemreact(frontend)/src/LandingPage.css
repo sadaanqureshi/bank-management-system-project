@@ -1,0 +1,100 @@
+/* Global styles */
+body {
+    margin: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Landing Page Container */
+  .landing-container {
+    text-align: center;
+    background: white;
+    padding: 30px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  /* Header Section */
+  .landing-header h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .landing-header p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* Buttons Section */
+  .landing-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .landing-button {
+    font-size: 1rem;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  /* Customer Button */
+  .landing-button.customer {
+    background: #5cdb95;
+    color: white;
+  }
+  
+  .landing-button.customer:hover {
+    background: #45c881;
+    transform: translateY(-2px);
+  }
+  
+  /* Admin Button */
+  .landing-button.admin {
+    background: #fc5c65;
+    color: white;
+  }
+  
+  .landing-button.admin:hover {
+    background: #e74c3c;
+    transform: translateY(-2px);
+  }
+  
+  /* Manager Button */
+  .landing-button.manager {
+    background: #3498db;
+    color: white;
+  }
+  
+  .landing-button.manager:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 480px) {
+    .landing-header h1 {
+      font-size: 1.5rem;
+    }
+  
+    .landing-header p {
+      font-size: 0.9rem;
+    }
+  
+    .landing-button {
+      font-size: 0.9rem;
+      padding: 12px 15px;
+    }
+  }
+  
