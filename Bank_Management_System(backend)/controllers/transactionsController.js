@@ -87,13 +87,13 @@ const getTransactionsByAccountID = async (req, res) => {
 const createTransaction = async (req, res) => {
     const connection = await db.getConnection(); // Get a transactional connection
     try {
-        const { AccountID, Amount, PIN, CardType } = req.body;
+        const { AccountID, Amount, PIN, CardType,ReceiverID } = req.body;
 
         // Validate input
-        if (!AccountID || Amount === undefined || Amount <= 0 || !CardType) {
+        if (!AccountID || Amount === undefined || Amount <= 0 || !CardType ||!ReceiverID) {
             return res.status(400).send({
                 success: false,
-                message: 'Valid AccountID, Amount, and CardType are required.',
+                message: 'Valid AccountID, Amount, and CardType and ReceiverID are required.',
             });
         }
 
@@ -136,8 +136,8 @@ const createTransaction = async (req, res) => {
 
         // Step 6: Insert the transaction into the Transactions table
         const [transactionResult] = await connection.query(
-            'INSERT INTO Transactions (AccountID, TransactionType, Amount, TransactionDate) VALUES (?, ?, ?, SYSDATE())',
-            [AccountID, 'Debit', Amount]
+            'INSERT INTO Transactions (AccountID, TransactionType, Amount, TransactionDate,ReceiverID) VALUES (?, ?, ?, SYSDATE(),?)',
+            [AccountID, 'Debit', Amount,ReceiverID]
         );
 
         // Step 7: Fetch the newly inserted transaction details
