@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken'); // For token generation
 
 const JWT_SECRET = 'your-secret-key'; // Replace with a secure secret key
 
+
+
 // const login = async (req, res) => {
 //   const { email, password } = req.body;
 
