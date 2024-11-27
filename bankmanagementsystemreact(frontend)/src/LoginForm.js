@@ -16,8 +16,11 @@ const LoginForm = () => {
     try {
       const response = await axios.post('http://localhost:5010/api/v1/auth/login', data);
       if (response.data.success) {
+        const { customerID } = response.data; // Assume backend sends `customerID`
+        localStorage.setItem('customerID', customerID); // Store customerID locally
+        // const response = await axios.post('http://localhost:5010/api/v1/  /login', data);
         alert('Login successful!');
-        navigate('/customer-dashboard'); // Redirect to the dashboard
+        navigate('/customer-dashboard');
       } else {
         alert(response.data.message || 'Invalid email or password');
       }
