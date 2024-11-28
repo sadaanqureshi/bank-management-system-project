@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAccounts, getAccountByID, createAccount, updateAccount, deleteAccount, getAccountDetailsForCustomer } = require('../controllers/accountsController');
+const { getAccounts, getAccountByID, createAccount, updateAccount, deleteAccount, getAccountDetailsForCustomer, depositMoney } = require('../controllers/accountsController');
 
 // router object
 const router = express.Router();
@@ -20,5 +20,6 @@ router.put('/update/:id', updateAccount);
 router.delete('/delete/:id', deleteAccount);
 
 router.get('/customer/:customerId', getAccountDetailsForCustomer);
+
 
 module.exports = router;
