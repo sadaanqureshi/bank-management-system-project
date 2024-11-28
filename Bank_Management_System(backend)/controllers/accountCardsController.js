@@ -567,10 +567,4 @@ const withdrawMoney = async (req, res) => {
       });
     }
   };
-  
-  
-
-  
-
-
 module.exports = { createCard,getCardByAccID,getCardByCardID,updateCardPIN,deleteCard,depositMoney,withdrawMoney };

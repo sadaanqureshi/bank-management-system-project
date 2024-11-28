@@ -420,6 +420,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 // module.exports = { login };
 
 const login = async (req, res) => {
+    //this is working
     const { CustomerID, Password } = req.body;
     console.log('Incoming request body:', req.body);
   
