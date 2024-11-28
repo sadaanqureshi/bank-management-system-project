@@ -23,7 +23,8 @@ const CustomerDashboard = () => {
     // Fetch customer details using the API endpoint
     const fetchCustomerData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5010/api/v1/customers/${CustomerID}`);
+        const response = await axios.get(`http://localhost:5010/api/v1/customers/get/${CustomerID}`);
+        console.log('Customer details response:', response.data);
         if (response.data.success) {
           setCustomer(response.data.data); // Set the customer data from the API response
         } else {
