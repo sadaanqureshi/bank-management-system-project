@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -11,22 +11,39 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
+    // Sanitize input data
+    const sanitizedData = {
+      CustomerID: data.CustomerID.trim(),
+      Password: data.Password.trim(),
+    };
+
+    setLoading(true);
+
     try {
-      const response = await axios.post('http://localhost:5010/api/v1/auth/login', data);
+      // Send the sanitized data to the auth controller
+      const response = await axios.post('http://localhost:5010/api/v1/auth/login', sanitizedData);
+
+      // Check if login is successful
       if (response.data.success) {
-        const { customerID } = response.data; // Assume backend sends `customerID`
-        localStorage.setItem('customerID', customerID); // Store customerID locally
-        // const response = await axios.post('http://localhost:5010/api/v1/  /login', data);
+        const { CustomerID, token, customerDetails } = response.data; // Destructure backend response
+        localStorage.setItem('CustomerID', CustomerID); // Save CustomerID in local storage
+        localStorage.setItem('token', token); // Save JWT token in local storage
+        console.log('Customer Details:', customerDetails); // Log customer details (optional)
         alert('Login successful!');
-        navigate('/customer-dashboard');
+        navigate('/customer-dashboard'); // Navigate to the dashboard
       } else {
-        alert(response.data.message || 'Invalid email or password');
+        // Display error message from backend
+        alert(response.data.message || 'Invalid Customer ID or Password.');
       }
     } catch (error) {
-      console.error('Error logging in:', error);
-      alert(error.response?.data?.message || 'Error logging in');
+      // Handle errors (e.g., server errors, network issues)
+      console.error('Login error:', error);
+      alert(error.response?.data?.message || 'An error occurred during login.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,29 +51,31 @@ const LoginForm = () => {
     <div className="form-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label>Email:</label>
+        <label>Customer ID:</label>
         <input
-          type="email"
-          placeholder="Enter your email"
-          {...register('email', {
-            required: 'Email is required',
+          type="text"
+          placeholder="Enter your Customer ID"
+          {...register('CustomerID', {
+            required: 'Customer ID is required',
             pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: 'Invalid email address',
+              value: /^[0-9]+$/, // Allow only numeric Customer IDs
+              message: 'Customer ID must be numeric.',
             },
           })}
         />
-        {errors.email && <p className="error">{errors.email.message}</p>}
+        {errors.CustomerID && <p className="error">{errors.CustomerID.message}</p>}
 
         <label>Password:</label>
         <input
           type="password"
           placeholder="Enter your password"
-          {...register('password', { required: 'Password is required' })}
+          {...register('Password', { required: 'Password is required' })}
         />
-        {errors.password && <p className="error">{errors.password.message}</p>}
+        {errors.Password && <p className="error">{errors.Password.message}</p>}
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
     </div>
   );
