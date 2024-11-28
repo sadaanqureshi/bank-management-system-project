@@ -31,6 +31,7 @@ const getCustomers = async (req, res) => {
 const getCustomerByID = async (req, res) => {
     try {
         const customerID = req.params.id;
+        console.log(customerID);
         if (!customerID) {
             return res.status(400).send({
                 success: false,
@@ -257,42 +258,6 @@ const deleteCustomer = async (req, res) => {
 };
 
 // Get Customer Details for Dashboard
-const getCustomerDetails = async (req, res) => {
-    try {
-        const customerID = req.params.customerID;
-
-        // Validate CustomerID
-        if (!customerID) {
-            return res.status(400).send({
-                success: false,
-                message: "CustomerID is required",
-            });
-        }
-
-        // Fetch customer details for the given CustomerID
-        const [customer] = await db.query('SELECT * FROM Customers WHERE CustomerID = ?', [customerID]);
-
-        if (!customer || customer.length === 0) {
-            return res.status(404).send({
-                success: false,
-                message: "No customer found with this CustomerID",
-            });
-        }
-
-        res.status(200).send({
-            success: true,
-            message: "Customer details fetched successfully",
-            data: customer[0], // Send single customer details
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({
-            success: false,
-            message: "Error in fetching customer details",
-            error: error.message || error,
-        });
-    }
-};
 
 
 
@@ -302,5 +267,4 @@ module.exports = {
     createCustomer,
     updateCustomer,
     deleteCustomer,
-    getCustomerDetails
 };

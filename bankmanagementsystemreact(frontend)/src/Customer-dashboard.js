@@ -1,44 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './Customer-dashboard.css';
+import axios from 'axios'; // Import axios to make API calls
+import './Customer-dashboard.css'; // Ensure proper styling
+import CustomerDetails from './CustomerDetails'; // Import the CustomerDetails component
+import Login from './LoginForm'; // Import the CustomerDetails component
 import MenuCard from './MenuCard';
 
-const CustomerHome = () => {
-  const [customer, setCustomer] = useState(null);
+const CustomerDashboard = () => {
+  const [customer, setCustomer] = useState(null); // State to store customer data
   const navigate = useNavigate();
+  // const CustomerID = localStorage.getItem('CustomerID'); // Retrieve the logged-in customer's ID
+  const CustomerID = localStorage.getItem('CustomerID'); // Retrieve CustomerID from local storage
 
+  console.log('Customer ID:', CustomerID);
   useEffect(() => {
-    const fetchCustomerDetails = async () => {
-      const customerID = localStorage.getItem('customerID'); // Retrieve the logged-in customer's ID
-      if (!customerID) {
-        alert('You need to log in first!');
-        navigate('/login');
-        return;
-      }
-
+    if (!CustomerID) {
+      alert('You need to log in first!');
+      navigate('/login');
+      return;
+    }
+    console.log('Customer ID:', CustomerID);
+    // Fetch customer details using the API endpoint
+    const fetchCustomerData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5010/api/v1/customers/${customerID}`);
+        const response = await axios.get(`http://localhost:5010/api/v1/customers/${CustomerID}`);
         if (response.data.success) {
-          setCustomer(response.data.data); // Set customer data
+          setCustomer(response.data.data); // Set the customer data from the API response
         } else {
-          alert('Failed to fetch customer details');
+          alert('No customer details found! Please log in again.');
+          navigate('/login');
         }
       } catch (error) {
         console.error('Error fetching customer details:', error);
         alert('Error fetching customer details');
+        navigate('/login');
       }
     };
 
-    fetchCustomerDetails();
-  }, [navigate]);
+    fetchCustomerData();
+  }, [CustomerID, navigate]);
 
   const navigateToService = (service) => {
     navigate(`/${service}`);
   };
 
   if (!customer) {
-    return <div>Loading...</div>; // Show a loading state while fetching data
+    return <div>Loading...</div>; // Show a loading state while setting customer data
   }
 
   return (
@@ -49,15 +56,10 @@ const CustomerHome = () => {
       </header>
 
       <div className="content-container">
-        <div className="account-details-card">
-          <h3>Account Details</h3>
-          <p><strong>Account Number:</strong> {customer.CustomerID}</p>
-          <p><strong>Account Type:</strong> {customer.AccountType || 'Not Available'}</p>
-          <p><strong>Balance:</strong> ₹{customer.Balance?.toLocaleString() || '0'}</p>
-          <p><strong>Email:</strong> {customer.Email}</p>
-          <p><strong>Phone:</strong> {customer.Phone}</p>
-        </div>
+        {/* Customer Details Component */}
+        <CustomerDetails customer={customer} />
 
+        {/* Action Buttons */}
         <div className="buttons-card">
           <h3>Actions</h3>
           <div className="menu-card-grid">
@@ -73,6 +75,4 @@ const CustomerHome = () => {
   );
 };
 
-export default CustomerHome;
-
-//newst
+export default CustomerDashboard;
