@@ -182,11 +182,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 // module.exports = { login };
 
 
-const db = require("../config/db");
+// const db = require("../config/db");
 // const bcrypt = require('bcrypt'); // For password comparison (if hashed)
-const jwt = require('jsonwebtoken'); // For token generation
+// const jwt = require('jsonwebtoken'); // For token generation
 
-const JWT_SECRET = 'your-secret-key'; // Replace with a secure secret key
+// const JWT_SECRET = 'your-secret-key'; // Replace with a secure secret key
 
 
 
