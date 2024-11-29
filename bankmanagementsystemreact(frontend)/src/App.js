@@ -4,7 +4,7 @@ import LandingPage from './LandingPage';
 import Home from './Home';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
-import AdminSignup from './AdminSignup';
+import AdminLogin from './AdminLogin';
 import ManagerSignup from './ManagerSignup';
 import CustomerHome from './Customer-dashboard';
 import Deposit from './Deposit';
@@ -13,6 +13,11 @@ import Loan from './Loan';
 import RequestATM from './RequestATM';
 import ReportProblem from './ReportProblem';
 import DeleteAccount from './deleteAccount';
+import Admindashboard from './Admindashboard';
+import AddEmployee from './addemp'; // Add Employee Component
+import DeleteEmployee from './delemp'; // Delete Employee Component
+import UpdateEmployee from './updateemp'; // Update Employee Component
+import ShowEmployees from './showemp'; // Show Employees Component
 
 function App() {
   return (
@@ -32,8 +37,14 @@ function App() {
         <Route path="/request-atm" element={<RequestATM />} />
         <Route path="/report-problem" element={<ReportProblem />} />
         <Route path="/deleteAccount" element={<DeleteAccount />} />
+
         {/* Admin Routes */}
-        <Route path="/signup/admin" element={<AdminSignup />} />
+        <Route path="/login/admin" element={<AdminLogin />} />
+        <Route path="/admindashboard" element={<Admindashboard />} />
+        <Route path="/admindashboard/add" element={<AddEmployee />} />
+        <Route path="/admindashboard/delete" element={<DeleteEmployee />} />
+        <Route path="/admindashboard/update" element={<UpdateEmployee />} />
+        <Route path="/admindashboard/show" element={<ShowEmployees />} />
 
         {/* Manager Routes */}
         <Route path="/signup/manager" element={<ManagerSignup />} />
@@ -43,6 +54,3 @@ function App() {
 }
 
 export default App;
-
-//neww
-//sadaan

@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 //get by employeeID
-router.get('/getbyeid/:EmployeeID',getEmployeeByID);
+// router.get('/getbyeid/:EmployeeID',getEmployeeByID);
 router.get('/getbyeid/:EmployeeID',getEmployeeByID);
 router.get('/getbybid/:BranchID',getEmployeesByBranchID);
 router.post('/create',createEmployee);

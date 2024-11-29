@@ -191,11 +191,21 @@ const createEmployee = async (req, res) => {
     try {
         const { EmployeeID, FirstName, LastName, Position, Salary, HireDate, BranchID } = req.body;
 
+        console.log(EmployeeID, FirstName, LastName, Position, Salary, HireDate, BranchID);
+
         // Check if all required fields are provided
         if (!EmployeeID || !FirstName || !LastName || !Position || !Salary || !HireDate || !BranchID) {
             return res.status(400).send({
                 success: false,
                 message: "All fields are required: EmployeeID, FirstName, LastName, Position, Salary, HireDate, BranchID",
+            });
+        }
+        const [existingEmployee] = await db.query('SELECT * FROM Employees WHERE EmployeeID = ?', [EmployeeID]);
+        if (existingEmployee.length > 0) {
+            return res.status(400).send({
+                success: false,
+                message: `Employee with EmployeeID ${EmployeeID} already exists.`,
+                alert: `Employee with EmployeeID ${EmployeeID} already exists.`,
             });
         }
 
@@ -213,11 +223,13 @@ const createEmployee = async (req, res) => {
             });
         }
 
+
+
         // Respond with success message
         res.status(201).send({
             success: true,
             message: "Employee created successfully!",
-          
+
         });
     } catch (error) {
         console.log(error);
@@ -289,6 +301,6 @@ const deleteEmployee = async (req, res) => {
 
 
 module.exports = {
-    createEmployee,getEmployeeByID,getEmployeesByBranchID,updateEmployee,deleteEmployee
-    
+    createEmployee, getEmployeeByID, getEmployeesByBranchID, updateEmployee, deleteEmployee
+
 };

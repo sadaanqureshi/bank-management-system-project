@@ -53,7 +53,7 @@ const LandingPage = () => {
         <button onClick={() => navigate('/signup/customer')} className="landing-button customer">
           Customer
         </button>
-        <button onClick={() => navigate('/signup/admin')} className="landing-button admin">
+        <button onClick={() => navigate('/login/admin')} className="landing-button admin">
           Admin
         </button>
         <button onClick={() => navigate('/signup/manager')} className="landing-button manager">
