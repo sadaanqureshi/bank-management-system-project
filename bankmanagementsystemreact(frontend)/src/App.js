@@ -12,6 +12,7 @@ import Withdraw from './Withdraw';
 import Loan from './Loan';
 import RequestATM from './RequestATM';
 import ReportProblem from './ReportProblem';
+import DeleteAccount from './deleteAccount';
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
         <Route path="/loan" element={<Loan />} />
         <Route path="/request-atm" element={<RequestATM />} />
         <Route path="/report-problem" element={<ReportProblem />} />
-
+        <Route path="/deleteAccount" element={<DeleteAccount />} />
         {/* Admin Routes */}
         <Route path="/signup/admin" element={<AdminSignup />} />
 

@@ -153,6 +153,7 @@ const createLoan = async (req, res) => {
             return res.status(400).send({
                 success: false,
                 message: `CustomerID ${CustomerID} already has an active loan.`,
+                alert: "Customer already has an active loan",
             });
         }
 
