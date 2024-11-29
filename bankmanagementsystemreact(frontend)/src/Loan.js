@@ -1,37 +1,68 @@
 import React, { useState } from 'react';
-import './Form.css';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
 
 const Loan = () => {
-  const [loanAmount, setLoanAmount] = useState('');
-  const [loanReason, setLoanReason] = useState('');
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(`Applying for Loan: ₹${loanAmount}, Reason: ${loanReason}`);
-    // Add logic to handle loan application here
+  // Handle form submission
+  const onSubmit = async (data) => {
+    const { CustomerID, LoanType } = data;
+
+    try {
+      setLoading(true);
+      // Sending a POST request to create a loan
+      const response = await axios.post('http://localhost:5010/api/v1/loans/create', {
+        CustomerID,
+        LoanType,
+      });
+
+      if (response.data.success) {
+        setMessage('Loan created successfully!');
+        reset(); // Reset form fields
+      } else {
+        setMessage(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage('Error creating loan. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="form-container">
-      <h2>Apply for Loan</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Loan Amount:</label>
-        <input
-          type="number"
-          value={loanAmount}
-          onChange={(e) => setLoanAmount(e.target.value)}
-          placeholder="Enter loan amount"
-          required
-        />
-        <label>Reason:</label>
-        <textarea
-          value={loanReason}
-          onChange={(e) => setLoanReason(e.target.value)}
-          placeholder="Enter reason for loan"
-          required
-        />
-        <button type="submit">Apply</button>
+    <div className="loan-form">
+      <h2>Create a Loan</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <label htmlFor="customerID">Customer ID:</label>
+          <input
+            type="text"
+            id="customerID"
+            {...register('CustomerID', { required: 'Customer ID is required' })}
+          />
+          {errors.CustomerID && <p>{errors.CustomerID.message}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="loanType">Loan Type:</label>
+          <input
+            type="text"
+            id="loanType"
+            {...register('LoanType', { required: 'Loan Type is required' })}
+          />
+          {errors.LoanType && <p>{errors.LoanType.message}</p>}
+        </div>
+
+        <button type="submit" disabled={loading}>
+          {loading ? 'Processing...' : 'Create Loan'}
+        </button>
       </form>
+
+      {message && <p>{message}</p>}
     </div>
   );
 };

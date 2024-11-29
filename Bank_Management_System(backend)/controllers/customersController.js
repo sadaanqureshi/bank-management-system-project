@@ -30,15 +30,15 @@ const getCustomers = async (req, res) => {
 
 const getCustomerByID = async (req, res) => {
     try {
-        const customerID = req.params.id;
-        console.log(customerID);
-        if (!customerID) {
+        const CustomerID = req.params.id;
+        console.log(CustomerID);
+        if (!CustomerID) {
             return res.status(400).send({
                 success: false,
                 message: "CustomerID is required",
             });
         }
-        const [data] = await db.query("SELECT * FROM Customers WHERE CustomerID = ?", [customerID]);
+        const [data] = await db.query("SELECT * FROM Customers WHERE CustomerID = ?", [CustomerID]);
         if (!data || data.length === 0) {
             return res.status(404).send({
                 success: false,
@@ -129,10 +129,10 @@ const createCustomer = async (req, res) => {
 // UPDATE CUSTOMER
 const updateCustomer = async (req, res) => {
     try {
-        const customerID = req.params.id;
+        const CustomerID = req.params.id;
         const { FirstName, LastName, Address, Email, Phone, BranchID, Password } = req.body;
 
-        if (!customerID) {
+        if (!CustomerID) {
             return res.status(400).send({
                 success: false,
                 message: "CustomerID is required in the URL",
@@ -140,7 +140,7 @@ const updateCustomer = async (req, res) => {
         }
 
         // Check if CustomerID exists
-        const [customerExists] = await db.query("SELECT 1 FROM Customers WHERE CustomerID = ?", [customerID]);
+        const [customerExists] = await db.query("SELECT 1 FROM Customers WHERE CustomerID = ?", [CustomerID]);
         if (!customerExists || customerExists.length === 0) {
             return res.status(404).send({
                 success: false,
@@ -194,7 +194,7 @@ const updateCustomer = async (req, res) => {
         }
 
         query += fields.join(", ") + " WHERE CustomerID = ?";
-        values.push(customerID);
+        values.push(CustomerID);
 
         const [result] = await db.query(query, values);
 
@@ -222,24 +222,24 @@ const updateCustomer = async (req, res) => {
 // DELETE CUSTOMER
 const deleteCustomer = async (req, res) => {
     try {
-        const customerID = req.params.id;
+        const CustomerID = req.params.id;
 
         // Check if the customer exists
-        const [customer] = await db.query('SELECT * FROM Customers WHERE CustomerID = ?', [customerID]);
+        const [customer] = await db.query('SELECT * FROM Customers WHERE CustomerID = ?', [CustomerID]);
         if (!customer || customer.length === 0) {
             return res.status(404).send({
                 success: false,
-                message:"CustomerID ${customerID} does not exist",
+                message:"CustomerID ${CustomerID} does not exist",
             });
         }
 
         // Delete the customer (this will also delete related accounts due to ON DELETE CASCADE)
-        const result = await db.query('DELETE FROM Customers WHERE CustomerID = ?', [customerID]);
+        const result = await db.query('DELETE FROM Customers WHERE CustomerID = ?', [CustomerID]);
 
         if (result.affectedRows === 0) {
             return res.status(404).send({
                 success: false,
-                message: "No customer found with CustomerID ${customerID}",
+                message: "No customer found with CustomerID ${CustomerID}",
             });
         }
 

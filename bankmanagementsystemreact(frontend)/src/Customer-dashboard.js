@@ -3,27 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios to make API calls
 import './Customer-dashboard.css'; // Ensure proper styling
 import CustomerDetails from './CustomerDetails'; // Import the CustomerDetails component
-import Login from './LoginForm'; // Import the CustomerDetails component
 import MenuCard from './MenuCard';
 
 const CustomerDashboard = () => {
   const [customer, setCustomer] = useState(null); // State to store customer data
   const navigate = useNavigate();
-  // const CustomerID = localStorage.getItem('CustomerID'); // Retrieve the logged-in customer's ID
   const CustomerID = localStorage.getItem('CustomerID'); // Retrieve CustomerID from local storage
 
-  console.log('Customer ID:', CustomerID);
   useEffect(() => {
     if (!CustomerID) {
       alert('You need to log in first!');
       navigate('/login');
       return;
     }
-    console.log('Customer ID:', CustomerID);
+
     // Fetch customer details using the API endpoint
     const fetchCustomerData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5010/api/v1/customers/${CustomerID}`);
+        const response = await axios.get(`http://localhost:5010/api/v1/customers/get/${CustomerID}`);
         if (response.data.success) {
           setCustomer(response.data.data); // Set the customer data from the API response
         } else {
@@ -42,6 +39,29 @@ const CustomerDashboard = () => {
 
   const navigateToService = (service) => {
     navigate(`/${service}`);
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
+    if (confirmDelete) {
+      try {
+        const response = await axios.delete(`http://localhost:5010/api/v1/customers/delete/${CustomerID}`);
+        if (response.data.success) {
+          alert('Account deleted successfully.');
+          localStorage.removeItem('CustomerID');
+          navigate('/login');
+        } else {
+          alert('Failed to delete account. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error deleting account:', error);
+        alert('An error occurred while deleting your account.');
+      }
+    }
+  };
+
+  const handleUpdateAccount = () => {
+    navigate(`/update-account/${CustomerID}`);
   };
 
   if (!customer) {
@@ -68,6 +88,8 @@ const CustomerDashboard = () => {
             <MenuCard title="Apply for Loan" onClick={() => navigateToService('loan')} />
             <MenuCard title="Request ATM Card" onClick={() => navigateToService('request-atm')} />
             <MenuCard title="Report a Problem" onClick={() => navigateToService('report-problem')} />
+            <MenuCard title="Update Account" onClick={handleUpdateAccount} />
+            <MenuCard title="Delete Account" onClick={()=> navigateToService('deleteAccount')} />
           </div>
         </div>
       </div>
