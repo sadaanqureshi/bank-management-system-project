@@ -207,65 +207,62 @@ const updateAccount = async (req, res) => {
 // Delete Account
 const deleteAccount = async (req, res) => {
     try {
-        const accountID = req.params.id;
-
-        if (!accountID) {
-            return res.status(404).send({
-                success: false,
-                message: "Invalid Account ID",
-            });
-        }
-
-        // Step 1: Get account details
-        const [account] = await db.query('SELECT * FROM Accounts WHERE AccountID = ?', [accountID]);
-        if (!account || account.length === 0) {
-            return res.status(404).send({
-                success: false,
-                message: `AccountID ${accountID} does not exist`,
-            });
-        }
-
-        const customerID = account[0].CustomerID;
-
-        // Step 2: Delete the account
-        const result = await db.query('DELETE FROM Accounts WHERE AccountID = ?', [accountID]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).send({
-                success: false,
-                message: `No account found with AccountID ${accountID}`,
-            });
-        }
-
-        // Step 3: Check if the customer has any remaining accounts
-        const [customerAccounts] = await db.query('SELECT * FROM Accounts WHERE CustomerID = ?', [customerID]);
-
-        // Step 4: If no accounts remain for the customer, delete the customer
-        if (customerAccounts.length === 0) {
-            await db.query('DELETE FROM Customers WHERE CustomerID = ?', [customerID]);
-            res.status(200).send({
-                success: true,
-                message: "Account and Customer Deleted Successfully",
-            });
-    
-        }else{
-            res.status(200).send({
-                success: true,
-                message: "Account Deleted Successfully",
-            });
-        }
-
-      
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            success: false,
-            message: "Error in Delete Account API",
-            error,
+      const accountID = req.params.id;
+  
+      if (!accountID) {
+        return res.status(404).send({
+          success: false,
+          message: "Invalid Account ID",
         });
+      }
+  
+      // Step 1: Get account details
+      const [account] = await db.query('SELECT * FROM Accounts WHERE AccountID = ?', [accountID]);
+      if (!account || account.length === 0) {
+        return res.status(404).send({
+          success: false,
+          message: `AccountID ${accountID} does not exist`,
+        });
+      }
+  
+      const customerID = account[0].CustomerID;
+  
+      // Step 2: Delete the account
+      const result = await db.query('DELETE FROM Accounts WHERE AccountID = ?', [accountID]);
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).send({
+          success: false,
+          message: `No account found with AccountID ${accountID}`,
+        });
+      }
+  
+      // Step 3: Check if the customer has any remaining accounts
+      const [customerAccounts] = await db.query('SELECT * FROM Accounts WHERE CustomerID = ?', [customerID]);
+  
+      // Step 4: If no accounts remain for the customer, delete the customer
+      if (customerAccounts.length === 0) {
+        await db.query('DELETE FROM Customers WHERE CustomerID = ?', [customerID]);
+        res.status(200).send({
+          success: true,
+          message: "Account and Customer Deleted Successfully",
+        });
+      } else {
+        res.status(200).send({
+          success: true,
+          message: "Account Deleted Successfully",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        success: false,
+        message: "Error in Delete Account API",
+        error,
+      });
     }
-};
-
+  };
+  
 // Get Account Details for Customer Dashboard
 const getAccountDetailsForCustomer = async (req, res) => {
     try {

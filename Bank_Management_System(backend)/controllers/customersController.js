@@ -222,41 +222,41 @@ const updateCustomer = async (req, res) => {
 // DELETE CUSTOMER
 const deleteCustomer = async (req, res) => {
     try {
-        const CustomerID = req.params.id;
-
-        // Check if the customer exists
-        const [customer] = await db.query('SELECT * FROM Customers WHERE CustomerID = ?', [CustomerID]);
-        if (!customer || customer.length === 0) {
-            return res.status(404).send({
-                success: false,
-                message:"CustomerID ${CustomerID} does not exist",
-            });
-        }
-
-        // Delete the customer (this will also delete related accounts due to ON DELETE CASCADE)
-        const result = await db.query('DELETE FROM Customers WHERE CustomerID = ?', [CustomerID]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).send({
-                success: false,
-                message: "No customer found with CustomerID ${CustomerID}",
-            });
-        }
-
-        res.status(200).send({
-            success: true,
-            message: "Customer and related accounts deleted successfully",
+      const CustomerID = req.params.id;
+  
+      // Check if the customer exists
+      const [customer] = await db.query('SELECT * FROM Customers WHERE CustomerID = ?', [CustomerID]);
+      if (!customer || customer.length === 0) {
+        return res.status(404).send({
+          success: false,
+          message: `CustomerID ${CustomerID} does not exist`,
         });
+      }
+  
+      // Delete the customer (this will also delete related accounts due to ON DELETE CASCADE)
+      const result = await db.query('DELETE FROM Customers WHERE CustomerID = ?', [CustomerID]);
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).send({
+          success: false,
+          message: `No customer found with CustomerID ${CustomerID}`,
+        });
+      }
+  
+      res.status(200).send({
+        success: true,
+        message: "Customer and related accounts deleted successfully",
+      });
     } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            success: false,
-            message: "Error deleting customer",
-            error,
-        });
+      console.log(error);
+      res.status(500).send({
+        success: false,
+        message: "Error deleting customer",
+        error,
+      });
     }
-};
-
+  };
+  
 // Get Customer Details for Dashboard
 
 
