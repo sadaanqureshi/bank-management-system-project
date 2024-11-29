@@ -256,7 +256,7 @@ const deleteEmployee = async (req, res) => {
         }
 
         // Prevent deletion if the position is 'Admin'
-        if (employee[0].Position === 'Admin') {
+        if (employee[0].Position.toLowerCase() === 'admin') {
             return res.status(403).send({
                 success: false,
                 message: `Employee with EmployeeID ${EmployeeID} is an Admin and cannot be deleted.`,
