@@ -85,7 +85,7 @@ const getTransactionsByAccountID = async (req, res) => {
 //create transaction
 
 const createTransaction = async (req, res) => {
-    const connection = await db.getConnection(); // Get a transactional connection
+    let connection;
     try {
         const { AccountID, Amount, PIN, CardType,ReceiverID } = req.body;
 
@@ -97,7 +97,11 @@ const createTransaction = async (req, res) => {
             });
         }
 
-        await connection.beginTransaction(); // Start the transaction
+          // Get a transactional connection
+          connection = await db.getConnection();
+
+          // Start the transaction
+          await connection.beginTransaction();
 
         // Step 1: Verify the account and get balance from Accounts table
         const [accountData] = await connection.query(
@@ -113,7 +117,7 @@ const createTransaction = async (req, res) => {
 
         // Step 2: Check if Account has the CardType (Debit or Credit)
         const selectedCard = accountData.find(card => card.CardType.toLowerCase() === CardType.toLowerCase());
-
+        console.log(accountData);
         if (!selectedCard) {
             throw new Error(`Account does not have a ${CardType} card.`);
         }
@@ -157,16 +161,20 @@ const createTransaction = async (req, res) => {
             newBalance,
         });
     } catch (error) {
-        // Rollback the transaction in case of an error
-        await connection.rollback(); // This undoes all changes made during the transaction
+        if (connection) {
+            // Rollback the transaction in case of an error
+            await connection.rollback();
+        }
         console.error('Error in creating transaction:', error);
         res.status(500).send({
             success: false,
             message: error.message || 'Error in creating transaction',
         });
     } finally {
-        // Release the connection back to the pool
-        connection.release();
+        if (connection) {
+            // Release the connection back to the pool
+            connection.release();
+        }
     }
 };
 
