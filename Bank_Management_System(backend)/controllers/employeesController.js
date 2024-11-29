@@ -124,6 +124,7 @@ const getEmployeesByBranchID = async (req, res) => {
 
 //update Employee
 const updateEmployee = async (req, res) => {
+    let connection;
     try {
         const { EmployeeID } = req.params;
         const { FirstName, LastName, Position, Salary, BranchID } = req.body;
@@ -135,6 +136,12 @@ const updateEmployee = async (req, res) => {
                 message: "All fields (FirstName, LastName, Position, Salary, BranchID) are required.",
             });
         }
+         // Get a connection from the pool
+         connection = await db.getConnection();
+
+         // Start a transaction
+         await connection.beginTransaction();
+ 
 
         // Check if the employee exists
         const [employee] = await db.query(`
@@ -142,6 +149,7 @@ const updateEmployee = async (req, res) => {
         `, [EmployeeID]);
 
         if (employee.length === 0) {
+            await connection.rollback();
             return res.status(404).send({
                 success: false,
                 message: `Employee with EmployeeID ${EmployeeID} not found.`,
@@ -154,6 +162,7 @@ const updateEmployee = async (req, res) => {
         `, [BranchID]);
 
         if (branch.length === 0) {
+            await connection.rollback();
             return res.status(404).send({
                 success: false,
                 message: `Branch with BranchID ${BranchID} not found.`,
@@ -167,6 +176,10 @@ const updateEmployee = async (req, res) => {
             WHERE EmployeeID = ?
         `, [FirstName, LastName, Position, Salary, BranchID, EmployeeID]);
 
+
+          // Commit the transaction
+          await connection.commit();
+
         // Respond with success message
         res.status(200).send({
             success: true,
@@ -174,13 +187,20 @@ const updateEmployee = async (req, res) => {
         });
 
     } catch (error) {
+           // Rollback the transaction in case of an error
+           if (connection) await connection.rollback();
         console.log(error);
         res.status(500).send({
             success: false,
             message: 'Error in Update Employee API',
             error: error.message || error,
         });
+       
+    } finally {
+        // Release the connection after the transaction
+        if (connection) connection.release();
     }
+
 };
 
 
@@ -188,6 +208,7 @@ const updateEmployee = async (req, res) => {
 
 // Create employee
 const createEmployee = async (req, res) => {
+    let connection;
     try {
         const { EmployeeID, FirstName, LastName, Position, Salary, HireDate, BranchID } = req.body;
 
@@ -200,8 +221,17 @@ const createEmployee = async (req, res) => {
                 message: "All fields are required: EmployeeID, FirstName, LastName, Position, Salary, HireDate, BranchID",
             });
         }
+ 
+        // Get a connection from the pool
+        connection = await db.getConnection();  // Ensure connection is obtained
+
+        // Start a transaction
+        await connection.beginTransaction();
+        
         const [existingEmployee] = await db.query('SELECT * FROM Employees WHERE EmployeeID = ?', [EmployeeID]);
         if (existingEmployee.length > 0) {
+               // Rollback the transaction if employee already exists
+               await connection.rollback();
             return res.status(400).send({
                 success: false,
                 message: `Employee with EmployeeID ${EmployeeID} already exists.`,
@@ -217,21 +247,25 @@ const createEmployee = async (req, res) => {
 
         // Check if the insertion was successful
         if (!data) {
+            await connection.rollback();
             return res.status(500).send({
                 success: false,
                 message: "Error in Insert Employees Query",
             });
         }
 
-
+        await connection.commit();
 
         // Respond with success message
         res.status(201).send({
+            
             success: true,
             message: "Employee created successfully!",
 
         });
     } catch (error) {
+        // Rollback the transaction in case of error
+        if (connection) await connection.rollback();
         console.log(error);
         res.status(500).send({
             success: false,
@@ -239,11 +273,16 @@ const createEmployee = async (req, res) => {
             error: error.message || error,
         });
     }
+    finally {
+      // Release the connection after the transaction
+      if (connection) connection.release();
+    }
 };
 
 
 //delete employee
 const deleteEmployee = async (req, res) => {
+    let connection;
     try {
         const { EmployeeID } = req.params;
 
@@ -254,6 +293,12 @@ const deleteEmployee = async (req, res) => {
                 message: "EmployeeID is required.",
             });
         }
+        // Get a connection from the pool
+        connection = await db.getConnection();  // Ensure connection is obtained
+
+        // Start a transaction
+        await connection.beginTransaction();
+
 
         // Check if the employee exists and their position
         const [employee] = await db.query(`
@@ -261,6 +306,8 @@ const deleteEmployee = async (req, res) => {
         `, [EmployeeID]);
 
         if (employee.length === 0) {
+                 // Rollback the transaction if employee not found
+                 await connection.rollback();
             return res.status(404).send({
                 success: false,
                 message: `Employee with EmployeeID ${EmployeeID} not found.`,
@@ -269,6 +316,8 @@ const deleteEmployee = async (req, res) => {
 
         // Prevent deletion if the position is 'Admin'
         if (employee[0].Position.toLowerCase() === 'admin') {
+                // Rollback the transaction if position is 'Admin'
+            await connection.rollback();
             return res.status(403).send({
                 success: false,
                 message: `Employee with EmployeeID ${EmployeeID} is an Admin and cannot be deleted.`,
@@ -280,6 +329,9 @@ const deleteEmployee = async (req, res) => {
             DELETE FROM Employees WHERE EmployeeID = ?
         `, [EmployeeID]);
 
+
+        await connection.commit();
+
         // Respond with success message
         res.status(200).send({
             success: true,
@@ -287,12 +339,19 @@ const deleteEmployee = async (req, res) => {
         });
 
     } catch (error) {
+        // Rollback the transaction in case of an error
+        if (connection) await connection.rollback();
+
         console.error(error);
         res.status(500).send({
             success: false,
             message: 'Error in Delete Employee API',
             error: error.message || error,
         });
+    }
+    finally {
+       // Release the connection after the transaction
+       if (connection) connection.release();
     }
 };
 
