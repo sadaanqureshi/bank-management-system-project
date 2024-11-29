@@ -13,6 +13,7 @@ import Loan from './Loan';
 import RequestATM from './RequestATM';
 import ReportProblem from './ReportProblem';
 import DeleteAccount from './deleteAccount';
+import UpdateAccount from './updateAccount';
 import Admindashboard from './Admindashboard';
 import AddEmployee from './addemp'; // Add Employee Component
 import DeleteEmployee from './delemp'; // Delete Employee Component
@@ -37,6 +38,7 @@ function App() {
         <Route path="/request-atm" element={<RequestATM />} />
         <Route path="/report-problem" element={<ReportProblem />} />
         <Route path="/deleteAccount" element={<DeleteAccount />} />
+        <Route path="/updateAccount" element={<UpdateAccount />} />
 
         {/* Admin Routes */}
         <Route path="/login/admin" element={<AdminLogin />} />

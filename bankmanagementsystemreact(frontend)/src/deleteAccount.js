@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import "./Form.css";
@@ -11,6 +11,8 @@ const DeleteAccount = () => {
     reset,
   } = useForm();
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = async (data) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this account? This action cannot be undone."
@@ -18,6 +20,7 @@ const DeleteAccount = () => {
 
     if (confirmDelete) {
       try {
+        setLoading(true); // Start loading
         const response = await axios.delete(
           `http://localhost:5010/api/v1/customers/delete/${data.CustomerID}`
         );
@@ -34,6 +37,8 @@ const DeleteAccount = () => {
           error.response?.data?.message ||
             "An error occurred while attempting to delete the account."
         );
+      } finally {
+        setLoading(false); // Stop loading
       }
     }
   };
@@ -56,8 +61,8 @@ const DeleteAccount = () => {
         </div>
 
         {/* Submit Button */}
-        <button type="submit" className="delete-button">
-          Delete Account
+        <button type="submit" className="delete-button" disabled={loading}>
+          {loading ? "Deleting..." : "Delete Account"}
         </button>
       </form>
     </div>

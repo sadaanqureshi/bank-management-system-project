@@ -56,9 +56,6 @@ const LandingPage = () => {
         <button onClick={() => navigate('/login/admin')} className="landing-button admin">
           Admin
         </button>
-        <button onClick={() => navigate('/signup/manager')} className="landing-button manager">
-          Manager
-        </button>
       </div>
     </div>
   );

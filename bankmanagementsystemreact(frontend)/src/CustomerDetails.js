@@ -54,9 +54,10 @@ const CustomerDetails = () => {
   return (
     <div className="customer-details">
       <h2>Account Details</h2>
-      <p><strong>Account Number:</strong> {customer.CustomerID}</p>
+      <p><strong>Customer ID:</strong> {customer.CustomerID}</p>
+      <p><strong>Account ID:</strong> {customer.AccountID}</p>
       <p><strong>Account Type:</strong> {customer.AccountType || 'Not Available'}</p>
-      <p><strong>Balance:</strong> ₹{customer.Balance?.toLocaleString() || '0'}</p>
+      <p><strong>Balance:</strong> ${customer.Balance?.toLocaleString() || '0'}</p>
       <p><strong>Email:</strong> {customer.Email}</p>
       <p><strong>Phone:</strong> {customer.Phone}</p>
     </div>

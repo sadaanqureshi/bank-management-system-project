@@ -88,7 +88,7 @@ const CustomerDashboard = () => {
             <MenuCard title="Apply for Loan" onClick={() => navigateToService('loan')} />
             <MenuCard title="Request ATM Card" onClick={() => navigateToService('request-atm')} />
             <MenuCard title="Report a Problem" onClick={() => navigateToService('report-problem')} />
-            <MenuCard title="Update Account" onClick={handleUpdateAccount} />
+            <MenuCard title="Update Account" onClick={()=> navigateToService('updateAccount')} />
             <MenuCard title="Delete Account" onClick={()=> navigateToService('deleteAccount')} />
           </div>
         </div>
