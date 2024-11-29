@@ -14,7 +14,7 @@ const PaymentComponent = () => {
   const fetchAllPayments = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5010/api/v1/payments'); // Update with your backend route
+      const response = await axios.get('http://localhost:5010/api/v1/payments/getall'); // Update with your backend route
       setAllPayments(response.data.payments || []);
       setMessage(response.data.message);
     } catch (error) {
@@ -33,7 +33,7 @@ const PaymentComponent = () => {
     }
     try {
       setLoading(true);
-      const response = await axios.get(`/api/payments/customer/${customerID}`); // Update with your backend route
+      const response = await axios.get(`http://localhost:5010/api/v1/payments/get/${customerID}`); // Update with your backend route
       setPaymentsByCustomer(response.data.payments || []);
       setMessage(response.data.message);
     } catch (error) {
@@ -48,9 +48,9 @@ const PaymentComponent = () => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      const response = await axios.post('/api/payments', data); // Update with your backend route
+      const response = await axios.post('http://localhost:5010/api/v1/payments/create', data); // Update with your backend route
       setMessage(response.data.message);
-      reset(); // Reset the form
+    //   reset(); // Reset the form
       fetchAllPayments(); // Refresh all payments
     } catch (error) {
       console.error('Error creating payment:', error);
