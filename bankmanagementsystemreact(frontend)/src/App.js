@@ -13,7 +13,11 @@ import Loan from './Loan';
 import RequestATM from './RequestATM';
 import ReportProblem from './ReportProblem';
 import DeleteAccount from './deleteAccount';
-import Admindashboard from './Admindashboard'; // Import the Admin Dashboard
+import Admindashboard from './Admindashboard';
+import AddEmployee from './addemp'; // Add Employee Component
+import DeleteEmployee from './delemp'; // Delete Employee Component
+import UpdateEmployee from './updateemp'; // Update Employee Component
+import ShowEmployees from './showemp'; // Show Employees Component
 
 function App() {
   return (
@@ -36,7 +40,11 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/login/admin" element={<AdminLogin />} />
-        <Route path="/admindashboard" element={<Admindashboard />} /> {/* Admin Dashboard */}
+        <Route path="/admindashboard" element={<Admindashboard />} />
+        <Route path="/admindashboard/add" element={<AddEmployee />} />
+        <Route path="/admindashboard/delete" element={<DeleteEmployee />} />
+        <Route path="/admindashboard/update" element={<UpdateEmployee />} />
+        <Route path="/admindashboard/show" element={<ShowEmployees />} />
 
         {/* Manager Routes */}
         <Route path="/signup/manager" element={<ManagerSignup />} />
