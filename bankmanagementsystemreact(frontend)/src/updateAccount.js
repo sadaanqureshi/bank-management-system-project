@@ -7,7 +7,8 @@ import "./Form.css";
 const UpdateAccount = () => {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
   const [loading, setLoading] = useState(false);
-  const { id: CustomerID } = useParams(); // Retrieve CustomerID from URL params
+  // const { id: CustomerID } = useParams(); // Retrieve CustomerID from URL params
+  const CustomerID = localStorage.getItem('CustomerID'); // Retrieve CustomerID from local storage
 
   // Fetch customer data and populate form
   useEffect(() => {
@@ -23,6 +24,7 @@ const UpdateAccount = () => {
         });
     }
   }, [CustomerID, setValue]);
+  console.log(CustomerID);
 
   // Submit the updated data to the backend
   const onSubmit = async (data) => {
@@ -33,7 +35,7 @@ const UpdateAccount = () => {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([_, value]) => value !== undefined && value !== "")
       );
-
+      console.log(CustomerID);
       const response = await axios.put(
         `http://localhost:5010/api/v1/customers/update/${CustomerID}`,
         filteredData

@@ -41,28 +41,25 @@ const CustomerDashboard = () => {
     navigate(`/${service}`);
   };
 
-  const handleDeleteAccount = async () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
-    if (confirmDelete) {
-      try {
-        const response = await axios.delete(`http://localhost:5010/api/v1/customers/delete/${CustomerID}`);
-        if (response.data.success) {
-          alert('Account deleted successfully.');
-          localStorage.removeItem('CustomerID');
-          navigate('/login');
-        } else {
-          alert('Failed to delete account. Please try again.');
-        }
-      } catch (error) {
-        console.error('Error deleting account:', error);
-        alert('An error occurred while deleting your account.');
-      }
-    }
-  };
+  // const handleDeleteAccount = async () => {
+  //   const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
+  //   if (confirmDelete) {
+  //     try {
+  //       const response = await axios.delete(`http://localhost:5010/api/v1/customers/delete/${CustomerID}`);
+  //       if (response.data.success) {
+  //         alert('Account deleted successfully.');
+  //         localStorage.removeItem('CustomerID');
+  //         navigate('/login');
+  //       } else {
+  //         alert('Failed to delete account. Please try again.');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error deleting account:', error);
+  //       alert('An error occurred while deleting your account.');
+  //     }
+  //   }
+  // };
 
-  const handleUpdateAccount = () => {
-    navigate(`/update-account/${CustomerID}`);
-  };
 
   if (!customer) {
     return <div>Loading...</div>; // Show a loading state while setting customer data
@@ -90,6 +87,8 @@ const CustomerDashboard = () => {
             <MenuCard title="Report a Problem" onClick={() => navigateToService('report-problem')} />
             <MenuCard title="Update Account" onClick={()=> navigateToService('updateAccount')} />
             <MenuCard title="Delete Account" onClick={()=> navigateToService('deleteAccount')} />
+            <MenuCard title="Send Money" onClick={()=> navigateToService('createTransaction')} />
+            <MenuCard title="Pay Money" onClick={()=> navigateToService('payments')} />
           </div>
         </div>
       </div>

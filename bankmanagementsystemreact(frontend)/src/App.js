@@ -19,6 +19,8 @@ import AddEmployee from './addemp'; // Add Employee Component
 import DeleteEmployee from './delemp'; // Delete Employee Component
 import UpdateEmployee from './updateemp'; // Update Employee Component
 import ShowEmployees from './showemp'; // Show Employees Component
+import PaymentComponent from './PaymentComponent';
+import TransactionForm from './TransactionForm'; // Import TransactionForm Component
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
         <Route path="/report-problem" element={<ReportProblem />} />
         <Route path="/deleteAccount" element={<DeleteAccount />} />
         <Route path="/updateAccount" element={<UpdateAccount />} />
+        <Route path="/createTransaction" element={<TransactionForm />} />
+        <Route path="/payments" element={<PaymentComponent />} />
 
         {/* Admin Routes */}
         <Route path="/login/admin" element={<AdminLogin />} />

@@ -131,6 +131,7 @@ const createCustomer = async (req, res) => {
 // UPDATE CUSTOMER
 const updateCustomer = async (req, res) => {
     try {
+      console.log(req.body.id);
       const CustomerID = req.params.id;
       const { FirstName, LastName, Address, Email, Phone, BranchID, Password } = req.body;
       console.log(CustomerID);
