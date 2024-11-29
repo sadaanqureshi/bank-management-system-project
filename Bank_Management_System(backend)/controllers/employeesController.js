@@ -243,7 +243,7 @@ const deleteEmployee = async (req, res) => {
             });
         }
 
-        // Check if the employee exists
+        // Check if the employee exists and their position
         const [employee] = await db.query(`
             SELECT * FROM Employees WHERE EmployeeID = ?
         `, [EmployeeID]);
@@ -252,6 +252,14 @@ const deleteEmployee = async (req, res) => {
             return res.status(404).send({
                 success: false,
                 message: `Employee with EmployeeID ${EmployeeID} not found.`,
+            });
+        }
+
+        // Prevent deletion if the position is 'Admin'
+        if (employee[0].Position === 'Admin') {
+            return res.status(403).send({
+                success: false,
+                message: `Employee with EmployeeID ${EmployeeID} is an Admin and cannot be deleted.`,
             });
         }
 
@@ -267,7 +275,7 @@ const deleteEmployee = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).send({
             success: false,
             message: 'Error in Delete Employee API',
@@ -275,7 +283,6 @@ const deleteEmployee = async (req, res) => {
         });
     }
 };
-
 
 
 
