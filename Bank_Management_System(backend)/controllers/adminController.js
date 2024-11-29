@@ -68,10 +68,10 @@ const loginAdmin = async (req, res) => {
             });
         }
 
-        // Compare the entered password with the hashed password stored in the database
-        const isMatch = await bcrypt.compare(Password, admin[0].Password);
+        // Compare the entered password with the stored password
+        const storedPassword = admin[0].Password;
 
-        if (!isMatch) {
+        if (Password !== storedPassword) {
             // If the passwords don't match, send error response
             return res.status(400).send({
                 success: false,
@@ -87,21 +87,17 @@ const loginAdmin = async (req, res) => {
                 AdminID: admin[0].AdminID,
                 Username: admin[0].Username,
                 EmployeeID: admin[0].EmployeeID,
-            }
+            },
         });
-
     } catch (error) {
         console.error(error);
         res.status(500).send({
             success: false,
             message: "Error logging in",
-            error: error,
+            error,
         });
     }
 };
-
-
-
 
 // Reset or upgrade admin password
 const resetPassword = async (req, res) => {
