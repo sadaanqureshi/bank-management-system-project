@@ -157,12 +157,19 @@ const createLoan = async (req, res) => {
             });
         }
 
-    
+      if(customerAndAccount[0].Balance<100000){
+        return res.status(400).send({
+            success: false,
+            message: `CustomerID ${CustomerID} don't have enough balance to apply for loan.`,
+            alert: "Customer don't have enough balance to apply for loan.",
+        });
+      }
         // Calculate interest and total loan amount
         const loanAmount = 50000; // Fixed loan amount
         const interestRate = 15.0; // 15% interest
         const interestAmount = (loanAmount * interestRate) / 100;
         const totalLoanAmount = loanAmount + interestAmount;
+    
 
         // Get the current date and calculate due date (1 year later)
         const loanDate = new Date();

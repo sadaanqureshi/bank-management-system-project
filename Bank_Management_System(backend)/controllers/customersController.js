@@ -38,7 +38,9 @@ const getCustomerByID = async (req, res) => {
                 message: "CustomerID is required",
             });
         }
-        const [data] = await db.query("SELECT * FROM Customers WHERE CustomerID = ?", [CustomerID]);
+        const [data] = await db.query(`SELECT c.*,a.AccountID,a.AccountType,a.Balance FROM Customers c
+Left join Accounts a ON c.CustomerID =a.CustomerID  
+WHERE c.CustomerID = ?`, [CustomerID]);
         if (!data || data.length === 0) {
             return res.status(404).send({
                 success: false,
