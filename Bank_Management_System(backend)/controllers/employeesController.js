@@ -273,7 +273,7 @@ const updateEmployee = async (req, res) => {
 
 
 
-
+//create employee
 const createEmployee = async (req, res) => {
     let connection;
     try {

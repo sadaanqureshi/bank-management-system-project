@@ -26,7 +26,7 @@ const getCustomers = async (req, res) => {
     }
 };
 
-// GET CUSTOMER BY ID
+// GET CUSTOMER BY CustomerID
 
 const getCustomerByID = async (req, res) => {
     try {
@@ -39,8 +39,8 @@ const getCustomerByID = async (req, res) => {
             });
         }
         const [data] = await db.query(`SELECT c.*,a.AccountID,a.AccountType,a.Balance FROM Customers c
-Left join Accounts a ON c.CustomerID =a.CustomerID  
-WHERE c.CustomerID = ?`, [CustomerID]);
+        Left join Accounts a ON c.CustomerID =a.CustomerID  
+        WHERE c.CustomerID = ?`, [CustomerID]);
         if (!data || data.length === 0) {
             return res.status(404).send({
                 success: false,
@@ -131,60 +131,60 @@ const createCustomer = async (req, res) => {
 // UPDATE CUSTOMER
 const updateCustomer = async (req, res) => {
     try {
-      const CustomerID = req.params.id;
-      const { FirstName, LastName, Address, Email, Phone, BranchID, Password } = req.body;
-      console.log(CustomerID);
-  
-      if (!CustomerID) {
-        return res.status(400).send({ success: false, message: "CustomerID is required in the URL" });
-      }
-  
-      // Check if CustomerID exists
-      const [customerExists] = await db.query("SELECT 1 FROM Customers WHERE CustomerID = ?", [CustomerID]);
-      if (!customerExists.length) {
-        return res.status(404).send({ success: false, message: "CustomerID does not exist." });
-      }
-  
-      // Validate BranchID if provided
-      if (BranchID) {
-        const [branchExists] = await db.query("SELECT 1 FROM Branches WHERE BranchID = ?", [BranchID]);
-        if (!branchExists.length) {
-          return res.status(400).send({ success: false, message: "Invalid BranchID. Branch does not exist." });
+        const CustomerID = req.params.id;
+        const { FirstName, LastName, Address, Email, Phone, BranchID, Password } = req.body;
+        console.log(CustomerID);
+
+        if (!CustomerID) {
+            return res.status(400).send({ success: false, message: "CustomerID is required in the URL" });
         }
-      }
-  
-      // Build dynamic update query
-      const fields = [];
-      const values = [];
-  
-      if (FirstName) fields.push("FirstName = ?") && values.push(FirstName);
-      if (LastName) fields.push("LastName = ?") && values.push(LastName);
-      if (Address) fields.push("Address = ?") && values.push(Address);
-      if (Email) fields.push("Email = ?") && values.push(Email);
-      if (Phone) fields.push("Phone = ?") && values.push(Phone);
-      if (BranchID) fields.push("BranchID = ?") && values.push(BranchID);
-      if (Password) fields.push("Password = ?") && values.push(Password); // Add hashing for production
-  
-      if (!fields.length) {
-        return res.status(400).send({ success: false, message: "No fields to update" });
-      }
-  
-      const query = `UPDATE Customers SET ${fields.join(", ")} WHERE CustomerID = ?`;
-      values.push(CustomerID);
-  
-      const [result] = await db.query(query, values);
-  
-      if (result.affectedRows === 0) {
-        return res.status(404).send({ success: false, message: "No customer found with the provided CustomerID" });
-      }
-  
-      res.status(200).send({ success: true, message: "Customer updated successfully" });
+
+        // Check if CustomerID exists
+        const [customerExists] = await db.query("SELECT 1 FROM Customers WHERE CustomerID = ?", [CustomerID]);
+        if (!customerExists.length) {
+            return res.status(404).send({ success: false, message: "CustomerID does not exist." });
+        }
+
+        // Validate BranchID if provided
+        if (BranchID) {
+            const [branchExists] = await db.query("SELECT 1 FROM Branches WHERE BranchID = ?", [BranchID]);
+            if (!branchExists.length) {
+                return res.status(400).send({ success: false, message: "Invalid BranchID. Branch does not exist." });
+            }
+        }
+
+        // Build dynamic update query
+        const fields = [];
+        const values = [];
+
+        if (FirstName) fields.push("FirstName = ?") && values.push(FirstName);
+        if (LastName) fields.push("LastName = ?") && values.push(LastName);
+        if (Address) fields.push("Address = ?") && values.push(Address);
+        if (Email) fields.push("Email = ?") && values.push(Email);
+        if (Phone) fields.push("Phone = ?") && values.push(Phone);
+        if (BranchID) fields.push("BranchID = ?") && values.push(BranchID);
+        if (Password) fields.push("Password = ?") && values.push(Password); // Add hashing for production
+
+        if (!fields.length) {
+            return res.status(400).send({ success: false, message: "No fields to update" });
+        }
+
+        const query = `UPDATE Customers SET ${fields.join(", ")} WHERE CustomerID = ?`;
+        values.push(CustomerID);
+
+        const [result] = await db.query(query, values);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send({ success: false, message: "No customer found with the provided CustomerID" });
+        }
+
+        res.status(200).send({ success: true, message: "Customer updated successfully" });
     } catch (error) {
-      console.error(error);
-      res.status(500).send({ success: false, message: "Error updating customer", error });
+        console.error(error);
+        res.status(500).send({ success: false, message: "Error updating customer", error });
     }
-  };
-  
+};
+
 
 // DELETE CUSTOMER
 const deleteCustomer = async (req, res) => {
