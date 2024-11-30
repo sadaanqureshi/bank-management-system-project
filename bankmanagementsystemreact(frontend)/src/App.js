@@ -23,6 +23,10 @@ import ShowEmployees from './showemp'; // Show Employees Component
 import PaymentComponent from './PaymentComponent';
 import TransactionForm from './TransactionForm'; // Import TransactionForm Component
 import NavigationButtons from './NavigationButtons';
+import AddBranch from './addbranch'; // Add Branch Component
+import DeleteBranch from './deletebranch'; // Delete Branch Component
+import UpdateBranch from './updatebranch'; // Update Branch Component
+import ShowBranch from './showbranch'; // Show Branches Component
 
 function App() {
   return (
@@ -46,6 +50,7 @@ function App() {
         <Route path="/updateAccount" element={<UpdateAccount />} />
         <Route path="/createTransaction" element={<TransactionForm />} />
         <Route path="/payments" element={<PaymentComponent />} />
+        
 
         {/* Admin Routes */}
         <Route path="/login/admin" element={<AdminLogin />} />
@@ -54,6 +59,10 @@ function App() {
         <Route path="/admindashboard/delete" element={<DeleteEmployee />} />
         <Route path="/admindashboard/update" element={<UpdateEmployee />} />
         <Route path="/admindashboard/show" element={<ShowEmployees />} />
+        <Route path="/admindashboard/addbranch" element={<AddBranch />} />
+        <Route path="/admindashboard/deletebranch" element={<DeleteBranch />} />
+        <Route path="/admindashboard/updatebranch" element={<UpdateBranch />} />
+        <Route path="/admindashboard/showbranch" element={<ShowBranch />} />
 
         {/* Manager Routes */}
         <Route path="/signup/manager" element={<ManagerSignup />} />
