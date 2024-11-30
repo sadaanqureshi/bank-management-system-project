@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import BackButton from './NavigationButtons'; // Import BackButton
 import LandingPage from './LandingPage';
 import Home from './Home';
 import LoginForm from './LoginForm';
@@ -21,10 +22,12 @@ import UpdateEmployee from './updateemp'; // Update Employee Component
 import ShowEmployees from './showemp'; // Show Employees Component
 import PaymentComponent from './PaymentComponent';
 import TransactionForm from './TransactionForm'; // Import TransactionForm Component
+import NavigationButtons from './NavigationButtons';
 
 function App() {
   return (
     <Router>
+      <NavigationButtons />{/* Add BackButton to render on every page */}
       <Routes>
         {/* Landing Page Route */}
         <Route path="/" element={<LandingPage />} />

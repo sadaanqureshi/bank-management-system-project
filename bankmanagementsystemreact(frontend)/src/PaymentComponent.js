@@ -46,19 +46,21 @@ const PaymentComponent = () => {
 
   // Handle payment creation
   const onSubmit = async (data) => {
+    console.log('Form Data:', data);
     try {
       setLoading(true);
-      const response = await axios.post('http://localhost:5010/api/v1/payments/create', data); // Update with your backend route
+      const response = await axios.post('http://localhost:5010/api/v1/payments/create', data);
       setMessage(response.data.message);
-    //   reset(); // Reset the form
-      fetchAllPayments(); // Refresh all payments
+      reset();
+      fetchAllPayments();
     } catch (error) {
-      console.error('Error creating payment:', error);
+      console.error('Error creating payment:', error.response?.data || error.message);
       setMessage(error.response?.data?.message || 'Error creating payment.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   // Initial fetch of all payments
   useEffect(() => {
