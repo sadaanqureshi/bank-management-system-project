@@ -34,15 +34,7 @@ const createCard = async (req, res) => {
 
     const accountBalance = accountData[0].Balance;
 
-    // Check if account has sufficient balance to deduct the fee
-    // if (accountBalance < 1500) {
-    //     return res.status(400).send({
-    //         success: false,
-    //         message: 'Insufficient balance for card creation fee.',
-    //     });
-    // }
-
-    // Check if the account already has two cards (one debit and one credit)
+   
     const [existingCards] = await db.query(
       'SELECT CardType FROM Account_Cards WHERE AccountID = ?',
       [AccountID]
@@ -447,12 +439,7 @@ const depositMoney = async (req, res) => {
       });
     }
     console.log(req.body);
-    // if (cardDetails[0].CardType.toLowerCase() !== CardType.toLowerCase()) {
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: `Invalid CardType ${CardType}.`,
-    //   });
-    // }
+  
     if (cardDetails[0].CardType.toLowerCase() !== CardType.toLowerCase()) {
       return res.status(404).json({
         success: false,

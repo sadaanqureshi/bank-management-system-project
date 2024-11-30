@@ -77,7 +77,7 @@ const getAllCustomerQueries = async (req, res) => {
                 cq.QueryType,
                 cq.Description,
                 cq.Status,
-                CONCAT(c.FirstName, ' ', c.LastName) AS CustomerName,  -- Concatenate First and Last Name
+                CONCAT(c.FirstName, ' ', c.LastName) AS CustomerName,  
                 c.Email AS CustomerEmail,                            
                 c.Phone AS CustomerPhone
             FROM Customer_Queries cq
