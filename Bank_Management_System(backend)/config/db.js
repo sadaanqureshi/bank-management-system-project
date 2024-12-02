@@ -4,7 +4,7 @@ const mySqlPool=mysql.createPool({
   host: 'localhost',
     user: 'root',      
     password: 'fast123',  
-    database: 'bank-management-system' ,
+    database: 'bank-management-system-2' ,
     
   });
   module.exports=mySqlPool;

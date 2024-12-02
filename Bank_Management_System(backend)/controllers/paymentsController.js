@@ -4,7 +4,9 @@ const db = require("../config/db");
 const createPayment = async (req, res) => {
     try {
         const { LoanID, Amount, PaymentMethod } = req.body;
-
+        console.log(`LoanID: ${LoanID}`);
+        console.log(`Amount: ${Amount}`);
+        console.log(`PaymentMethod: ${PaymentMethod}`);
         // Validate input fields
         if (!LoanID || !Amount || !PaymentMethod) {
             return res.status(400).send({
@@ -35,7 +37,19 @@ const LoanBalance=loanDetails[0].Amount;
         }
 const [AccountBalance]=await db.query('Select a.Balance from Loans l JOIN Customers c ON l.CustomerID = c.CustomerID  JOIN Accounts a ON c.CustomerID = a.CustomerID where l.LoanID=?',[LoanID]);
 
+const remainingBalance = LoanBalance - Amount;
+        let loanStatus = `Remaining balance: ${remainingBalance}`;
+        console.log(remainingBalance);
+        if (remainingBalance <= 0) {
+            // Remove the loan if fully paid
+            await db.query('DELETE FROM Loans WHERE LoanID = ?', [LoanID]);
+            
+            loanStatus = "Loan fully paid and removed";
+        }
+
 if (AccountBalance[0].Balance<Amount){
+    console.log(AccountBalance[0].Balance);
+    console.log(Amount);
     return res.status(400).send({
         success: false,
         message: `Insufficient account balance for payemnt of ${Amount}`,
@@ -61,13 +75,15 @@ await db.query(
         await db.query('UPDATE Loans SET Amount = Amount - ? WHERE LoanID = ?', [Amount, LoanID]);
 
         // Check if loan is fully paid
-        const remainingBalance = LoanBalance - Amount;
-        let loanStatus = `Remaining balance: ${remainingBalance}`;
-        if (remainingBalance <= 0) {
-            // Remove the loan if fully paid
-            await db.query('DELETE FROM Loans WHERE LoanID = ?', [LoanID]);
-            loanStatus = "Loan fully paid and removed";
-        }
+        // const remainingBalance = LoanBalance - Amount;
+        // let loanStatus = `Remaining balance: ${remainingBalance}`;
+        // console.log(remainingBalance);
+        // if (remainingBalance <= 0) {
+        //     // Remove the loan if fully paid
+        //     await db.query('DELETE FROM Loans WHERE LoanID = ?', [LoanID]);
+            
+        //     loanStatus = "Loan fully paid and removed";
+        // }
 
         // Fetch updated remaining balance and loan details using a join
         const [updatedDetails] = await db.query(

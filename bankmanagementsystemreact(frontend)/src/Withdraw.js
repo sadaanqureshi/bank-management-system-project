@@ -19,7 +19,7 @@ const Withdraw = () => {
         "http://localhost:5010/api/v1/accountcards/withdrawl", // Backend endpoint
         data
       );
-      // alert(response.data.message);
+      alert(response.data.message);
       console.log("Withdrawal successful:", response.data);
       // reset(); // Reset form fields
     } catch (error) {

@@ -685,6 +685,8 @@ const withdrawMoney = async (req, res) => {
 
     // Check if the account has sufficient balance for withdrawal
     if (cardDetails[0].Balance < Amount) {
+      console.log(Amount);
+      console.log(cardDetails[0].Balance);
       return res.status(400).json({
         success: false,
         message: `Insufficient balance for withdrawal.`,
