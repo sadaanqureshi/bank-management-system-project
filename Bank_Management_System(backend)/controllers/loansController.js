@@ -205,6 +205,7 @@ const createLoan = async (req, res) => {
         res.status(201).send({
             success: true,
             message: "Loan created successfully, and loan amount added to account balance!",
+            
             loanDetails: {
                 LoanID: loan.insertId,
                 CustomerID,

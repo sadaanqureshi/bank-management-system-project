@@ -1,3 +1,6 @@
+CREATE DATABASE `bank-management-system` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+
 
 CREATE TABLE Admin (
     AdminID INT PRIMARY KEY AUTO_INCREMENT,   
@@ -9,7 +12,7 @@ CREATE TABLE Admin (
 
 -- 1. Customers Table
 CREATE TABLE Customers (
-    CustomerID INT PRIMARY KEY,
+    CustomerID BIGINT PRIMARY KEY,
     Password VARCHAR(50),
     FirstName VARCHAR(50),
     LastName VARCHAR(50),
@@ -23,7 +26,7 @@ CREATE TABLE Customers (
 -- 2. Accounts Table
 CREATE TABLE Accounts (
     AccountID INT AUTO_INCREMENT PRIMARY KEY,
-    CustomerID INT,
+    CustomerID BIGINT,
     AccountType VARCHAR(20),
     Balance DECIMAL(15, 2),
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE
@@ -43,26 +46,25 @@ CREATE TABLE Transactions (
 -- 4. Loans Table
 CREATE TABLE Loans (
     LoanID INT AUTO_INCREMENT PRIMARY KEY,
-    CustomerID INT,
+    CustomerID BIGINT,
     LoanType VARCHAR(20),
     Amount DECIMAL(15, 2),
     InterestRate DECIMAL(5, 2),
     LoanDate DATE,
     DueDate DATE,
     Status VARCHAR(20),
-    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)ON DELETE CASCADE
 );
 
 -- 5. Payments Table
 CREATE TABLE Payments (
-    PaymentID VARCHAR(20) PRIMARY KEY,   -- PaymentID with prefix 'PID'
+    PaymentID INT AUTO_INCREMENT PRIMARY KEY,   -- PaymentID 
     LoanID INT,
     Amount DECIMAL(15, 2),
     PaymentDate DATE,
     PaymentMethod VARCHAR(20),
-    FOREIGN KEY (LoanID) REFERENCES Loans(LoanID)
+    FOREIGN KEY (LoanID) REFERENCES Loans(LoanID) ON DELETE CASCADE
 );
-
 
 -- 6. Employees Table
 CREATE TABLE Employees (
@@ -75,6 +77,8 @@ CREATE TABLE Employees (
     BranchID INT,
     FOREIGN KEY (BranchID) REFERENCES Branches(BranchID)
 );
+
+
 
 -- 7. Account_Cards Table
 CREATE TABLE Account_Cards (
@@ -99,7 +103,7 @@ CREATE TABLE Branches (
 -- 9. Customer_Queries Table
 CREATE TABLE Customer_Queries (
     QueryID INT  AUTO_INCREMENT PRIMARY KEY,
-    CustomerID INT,
+    CustomerID BIGINT,
     EmployeeID INT,
     QueryDate DATE,
     QueryType VARCHAR(50),
@@ -126,6 +130,8 @@ CREATE TABLE EmployeeAudit (
     ChangedBy VARCHAR(50) NOT NULL,         -- User or system making the change
     ChangedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp of the change
 );
+
+
 -- Create TransactionAudit Table
 CREATE TABLE TransactionAudit (
     AuditID INT AUTO_INCREMENT PRIMARY KEY,   -- Unique identifier for each audit entry
@@ -155,6 +161,7 @@ VALUES (NEW.TransactionID, NEW.AccountID, NEW.TransactionType, NEW.Amount,
 NEW.TransactionDate, 'INSERT'); 
 END $$ 
 DELIMITER ; 
+
 DELIMITER $$ 
 CREATE TRIGGER after_employee_insert 
 AFTER INSERT ON Employees 
@@ -166,6 +173,8 @@ VALUES (NEW.EmployeeID, NEW.FirstName, NEW.LastName, NEW.Position, NEW.Salary,
 NEW.BranchID, 'CREATE', 'SYSTEM'); 
 END $$ 
 DELIMITER ; 
+
+
 DELIMITER $$ 
 CREATE TRIGGER after_employee_update 
 AFTER UPDATE ON Employees 
@@ -177,6 +186,9 @@ VALUES (NEW.EmployeeID, NEW.FirstName, NEW.LastName, NEW.Position, NEW.Salary,
 NEW.BranchID, 'UPDATE', 'SYSTEM'); 
 END $$ 
 DELIMITER ; 
+
+
+
 DELIMITER $$ 
 CREATE TRIGGER after_employee_delete 
 AFTER DELETE ON Employees 
@@ -188,3 +200,33 @@ VALUES (OLD.EmployeeID, OLD.FirstName, OLD.LastName, OLD.Position, OLD.Salary, O
 'DELETE', 'SYSTEM'); 
 END $$ 
 DELIMITER ;
+
+
+
+
+INSERT INTO Admin (Username, Password, EmployeeID)
+VALUES ('arsalan', 'arsalan123', 4614);
+
+INSERT INTO Admin (Username, Password, EmployeeID)
+VALUES ('sadaan', 'sadaan123', 4196);
+
+INSERT INTO Admin (Username, Password, EmployeeID)
+VALUES ('qasim', 'qasim123', 4380);
+
+
+
+INSERT INTO Employees (EmployeeID, FirstName, LastName, Position, Salary, HireDate, BranchID)
+VALUES (4614, 'Arsalan', '-', 'Administrator', 60000.00, '2024-01-15', 1);
+
+INSERT INTO Employees (EmployeeID, FirstName, LastName, Position, Salary, HireDate, BranchID)
+VALUES (4196, 'Sadaan', 'Qureshi', 'Administrator', 55000.00, '2024-02-20', 1);
+
+INSERT INTO Employees (EmployeeID, FirstName, LastName, Position, Salary, HireDate, BranchID)
+VALUES (4380, 'Qasim', 'Naveed', 'Administrator', 52000.00, '2024-03-10', 1);
+
+
+INSERT INTO Branches (BranchID, BranchName, Location, Phone)
+VALUES (1, 'Main Branch', '123 Main Street, City Center', '123-456-7890');
+
+
+

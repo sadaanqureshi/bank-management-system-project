@@ -621,7 +621,109 @@ const depositMoney = async (req, res) => {
 
 
 
-//withdrawl money
+// //withdrawl money
+// const withdrawMoney = async (req, res) => {
+//   try {
+//     const { CustomerID, CardType, PIN, Amount } = req.body;
+
+//     // Validate input
+//     if (!CustomerID || !CardType || !PIN || !Amount) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "CustomerID, CardType, PIN, and Amount are required.",
+//       });
+//     }
+
+
+
+
+//     if (Amount <= 0) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Amount must be greater than zero.",
+//       });
+//     }
+
+//     // Validate the card details and PIN
+//     const [cardDetails] = await db.query(
+//       `SELECT ac.*, c.*, a.* FROM Customers c
+//          LEFT JOIN Accounts a ON c.CustomerID = a.CustomerID
+//          LEFT JOIN account_cards ac ON a.AccountID = ac.AccountID WHERE c.CustomerID = ?`,
+//       [CustomerID]
+//     );
+
+//     console.log("CardType from request:", CardType);
+//     console.log("CardType from database:", cardDetails[0].CardType);
+
+//     if (!cardDetails || cardDetails.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: `Invalid Customer ID ${CustomerID}.`,
+//       });
+//     }
+
+//     if (cardDetails[0].AccountID === null) {
+//       return res.status(404).json({
+//         success: false,
+//         message: `Customer with ID ${CustomerID} doesn't have an account.`,
+//       });
+//     }
+
+//     if (cardDetails[0].CardType.toLowerCase() !== CardType.toLowerCase()) {
+//       return res.status(404).json({
+//         success: false,
+//         message: `Invalid CardType ${CardType}.`,
+//       });
+//     }
+
+//     if (cardDetails[0].PIN !== PIN) {
+//       return res.status(404).json({
+//         success: false,
+//         message: `Invalid PIN.`,
+//       });
+//     }
+
+//     // Check if the account has sufficient balance for withdrawal
+//     if (cardDetails[0].Balance < Amount) {
+//       console.log(Amount);
+//       console.log(cardDetails[0].Balance);
+//       return res.status(400).json({
+//         success: false,
+//         message: `Insufficient balance for withdrawal.`,
+//       });
+//     }
+
+//     // Withdraw money (update the account balance)
+//     await db.query(
+//       "UPDATE Accounts SET Balance = Balance - ? WHERE AccountID = ?",
+//       [Amount, cardDetails[0].AccountID]
+//     );
+
+//     // Retrieve updated account details
+//     const [updatedAccount] = await db.query(
+//       `SELECT ac.*, c.*, a.* FROM Account_Cards ac
+//          JOIN Accounts a ON ac.AccountID = a.AccountID
+//          JOIN Customers c ON a.CustomerID = c.CustomerID WHERE ac.AccountID = ?`,
+//       [cardDetails[0].AccountID]
+//     );
+
+//     // Return success response with the updated balance
+//     return res.status(200).json({
+//       success: true,
+//       message: `Successfully withdrew ${Amount} from Account ID ${cardDetails[0].AccountID}.`,
+//       CustomerDetails: updatedAccount[0],
+//       Balance: updatedAccount[0].Balance,
+//     });
+//   } catch (error) {
+//     console.error("Error during withdrawal:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Error occurred during withdrawal.",
+//       error: error.message || error,
+//     });
+//   }
+// };
+
 const withdrawMoney = async (req, res) => {
   try {
     const { CustomerID, CardType, PIN, Amount } = req.body;
@@ -633,9 +735,6 @@ const withdrawMoney = async (req, res) => {
         message: "CustomerID, CardType, PIN, and Amount are required.",
       });
     }
-
-
-
 
     if (Amount <= 0) {
       return res.status(400).json({
@@ -652,13 +751,12 @@ const withdrawMoney = async (req, res) => {
       [CustomerID]
     );
 
-    console.log("CardType from request:", CardType);
-    console.log("CardType from database:", cardDetails[0].CardType);
+    console.log("Card Details Result:", cardDetails);
 
     if (!cardDetails || cardDetails.length === 0) {
       return res.status(404).json({
         success: false,
-        message: `Invalid Customer ID ${CustomerID}.`,
+        message: `Invalid Customer ID ${CustomerID} or no associated account/card found.`,
       });
     }
 
@@ -669,7 +767,7 @@ const withdrawMoney = async (req, res) => {
       });
     }
 
-    if (cardDetails[0].CardType.toLowerCase() !== CardType.toLowerCase()) {
+    if (cardDetails[0].CardType?.toLowerCase() !== CardType.toLowerCase()) {
       return res.status(404).json({
         success: false,
         message: `Invalid CardType ${CardType}.`,
@@ -683,10 +781,10 @@ const withdrawMoney = async (req, res) => {
       });
     }
 
+    console.log(Amount);
+    console.log(cardDetails[0].Balance);
     // Check if the account has sufficient balance for withdrawal
-    if (cardDetails[0].Balance < Amount) {
-      console.log(Amount);
-      console.log(cardDetails[0].Balance);
+    if (cardDetails[0].Balance <= Amount) {
       return res.status(400).json({
         success: false,
         message: `Insufficient balance for withdrawal.`,
@@ -723,4 +821,9 @@ const withdrawMoney = async (req, res) => {
     });
   }
 };
+
+
+
+
+
 module.exports = { createCard, getCardByAccID, getCardByCardID, updateCardPIN, deleteCard, depositMoney, withdrawMoney };

@@ -15,6 +15,8 @@ const Withdraw = () => {
   const onSubmit = async (data) => {
     try {
       console.log("Withdrawal Data:", data);
+    
+
       const response = await axios.post(
         "http://localhost:5010/api/v1/accountcards/withdrawl", // Backend endpoint
         data
