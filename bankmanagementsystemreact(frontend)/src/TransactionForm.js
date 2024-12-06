@@ -20,6 +20,7 @@ const createTransaction = () => {
     setErrorMessage(null);
 
     try {
+      console.log("Transaction Data:", data);
       const response = await axios.post(
         "http://localhost:5010/api/v1/transactions/create",
         data
@@ -62,7 +63,7 @@ const createTransaction = () => {
       id="Amount"
       {...register("Amount", {
         required: "Amount is required",
-        min: { value: 1, message: "Amount must be greater than 0" },
+        min: {  message: "Amount must be greater than 0" },
       })}
     />
     {errors.Amount && <p className="error">{errors.Amount.message}</p>}

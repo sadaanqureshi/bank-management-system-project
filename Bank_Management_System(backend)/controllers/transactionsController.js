@@ -87,8 +87,10 @@ const getTransactionsByAccountID = async (req, res) => {
 const createTransaction = async (req, res) => {
     let connection;
     try {
-        const { AccountID, Amount, PIN, CardType,ReceiverID } = req.body;
 
+        const { AccountID, Amount, PIN, CardType,ReceiverID } = req.body;
+        console.log(`AccountID: ${AccountID}`);
+        console.log(`Amount: ${Amount}`);
         // Validate input
         if (!AccountID || Amount === undefined || Amount <= 0 || !CardType ||!ReceiverID) {
             return res.status(400).send({
