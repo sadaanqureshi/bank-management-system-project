@@ -81,8 +81,8 @@ const PaymentForm = () => {
 
   // Handle form submission
   const onSubmit = async (data) => {
-    const { LoanID, Amount, PaymentMethod } = data;
-
+    const { CustomerID, LoanType } = data;
+//fixed
     try {
       setLoading(true);
       // Sending a POST request to create a payment
