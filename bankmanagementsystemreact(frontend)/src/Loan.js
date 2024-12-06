@@ -10,7 +10,7 @@ const Loan = () => {
   // Handle form submission
   const onSubmit = async (data) => {
     const { CustomerID, LoanType } = data;
-
+//fixed
     try {
       setLoading(true);
       // Sending a POST request to create a loan
