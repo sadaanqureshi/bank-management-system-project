@@ -132,7 +132,10 @@ const createTransaction = async (req, res) => {
         const currentBalance = account.Balance;  // Get the balance from the Accounts table
 
         // Step 4: Check for insufficient balance
-        if (currentBalance < Amount) {
+        const amount = parseFloat(Amount); // Convert string to number
+const currentbalance=parseFloat(currentBalance)
+
+        if (currentbalance < amount) {
             throw new Error('Insufficient balance to complete the transaction');
         }
 

@@ -9,6 +9,9 @@ const ReportProblem = () => {
     e.preventDefault();
     console.log(`Problem Reported by: ${name}, Problem: ${problem}`);
     // Add logic to handle problem reporting here
+
+    alert('Your problem has been reported successfully.');
+    window.location.reload(); 
   };
 
   return (

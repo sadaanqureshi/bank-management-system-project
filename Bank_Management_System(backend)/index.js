@@ -13,7 +13,8 @@ dotenv.config();
 
 // Middleware
 app.use(morgan('dev')); // Logging middleware
-app.use(cors()); // Use CORS middleware
+//app.use(cors()); // Use CORS middleware
+app.use(cors({ origin: "http://localhost:3000" })); 
 
 // Routes
 app.use('/api/v1/branches', require('./routes/branchesRoutes'));

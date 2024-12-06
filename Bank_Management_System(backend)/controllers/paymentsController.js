@@ -53,10 +53,14 @@ const db = require("../config/db");
 // const remainingBalance = LoanBalance - Amount;
 //         let loanStatus = `Remaining balance: ${remainingBalance}`;
 //         console.log(remainingBalance);
-//         if (remainingBalance <= 0) {
+//         if (remainingBalance == 0) {
 //             // Remove the loan if fully paid
 //             await db.query('DELETE FROM Loans WHERE LoanID = ?', [LoanID]);
 //   loanStatus = "Loan fully paid and removed";
+//   return res.status(400).send({
+//     success: true,
+//     message: ` ${Amount}`
+//         })
 //         }
 
 // if (AccountBalance[0].Balance<Amount){
@@ -162,10 +166,11 @@ const createPayment = async (req, res) => {
             });
         }
 
-        const LoanBalance = loanDetails[0].Amount;
+        const amount = parseFloat(Amount); // Convert string to number
+        const LoanBalance = (loanDetails[0].Amount);
 
         // Check if payment amount is less than or equal to loan balance
-        if (Amount > LoanBalance) {
+        if (amount > LoanBalance) {
             return res.status(400).send({
                 success: false,
                 message: `Payment amount exceeds the loan balance of ${LoanBalance}.`,
@@ -184,9 +189,9 @@ const createPayment = async (req, res) => {
                 message: `Account balance for LoanID ${LoanID} not found.`,
             });
         }
-
+        const accountbalance = parseFloat(AccountBalance[0].Balance);
         // Check if account balance is sufficient for the payment
-        if (AccountBalance[0].Balance < Amount) {
+        if (accountbalance < amount) {
             return res.status(400).send({
                 success: false,
                 message: `Insufficient account balance for payment of ${Amount}`,
@@ -195,11 +200,21 @@ const createPayment = async (req, res) => {
 
         const remainingBalance = LoanBalance - Amount;
         let loanStatus = `Remaining balance: ${remainingBalance}`;
-
-        if (remainingBalance <= 0) {
+console.log(typeof remainingBalance);
+        if (remainingBalance == 0) {
+    // Deduct the payment amount from the account balance
+    await db.query(
+        'UPDATE Accounts a JOIN Customers c ON a.CustomerID = c.CustomerID JOIN Loans l ON c.CustomerID = l.CustomerID SET a.Balance = a.Balance - ? WHERE l.LoanID = ?',
+        [Amount, LoanID]
+    );
             // Remove the loan if fully paid
             await db.query('DELETE FROM Loans WHERE LoanID = ?', [LoanID]);
             loanStatus = "Loan fully paid and removed";
+            return res.status(400).send({
+                success: true,
+                message: `Loan is fully paid and removed from Customer`,
+            });
+
         }
 
         // Deduct the payment amount from the account balance
@@ -336,9 +351,58 @@ JOIN
     }
 };
 
+const getAllPayments = async (req, res) => {
+    try {
+        // Query to fetch all payments with related details
+        const [payments] = await db.query(`
+  SELECT 
+    p.PaymentID,
+    p.LoanID,
+    p.Amount AS PaymentAmount,
+    p.PaymentDate,
+    p.PaymentMethod,
+    c.CustomerID,
+    c.FirstName,
+    c.LastName,
+    l.LoanType,
+    l.InterestRate,
+    l.LoanDate,
+    l.DueDate,
+    l.Status
+FROM 
+    Payments p
+JOIN 
+    Loans l ON p.LoanID = l.LoanID
+JOIN 
+    Customers c ON l.CustomerID = c.CustomerID;
 
+        `);
+
+        // Check if any payments exist
+        if (payments.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: "No payments found.",
+            });
+        }
+
+        // Respond with the list of payments
+        res.status(200).send({
+            success: true,
+            message: "Payments retrieved successfully.",
+            payments,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({
+            success: false,
+            message: "Error retrieving payments.",
+            error: error.message || error,
+        });
+    }
+};
 
 module.exports = {
-    createPayment,getPaymentsByCustomerID
+    createPayment,getPaymentsByCustomerID,getAllPayments
     
 };

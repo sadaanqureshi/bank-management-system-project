@@ -39,6 +39,7 @@ CREATE TABLE Transactions (
     TransactionType VARCHAR(20) NOT NULL,       
     Amount DECIMAL(15, 2) NOT NULL,             
     TransactionDate DATE NOT NULL, 
+	ReceiverID INT,
               
     FOREIGN KEY (AccountID) REFERENCES Accounts(AccountID) ON DELETE CASCADE
 );

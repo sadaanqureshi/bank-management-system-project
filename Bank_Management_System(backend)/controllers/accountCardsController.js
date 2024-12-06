@@ -781,10 +781,14 @@ const withdrawMoney = async (req, res) => {
       });
     }
 
-    console.log(Amount);
-    console.log(cardDetails[0].Balance);
+    console.log(Amount,typeof Amount);
+    console.log(cardDetails[0].Balance,typeof cardDetails[0].Balance);
     // Check if the account has sufficient balance for withdrawal
-    if (cardDetails[0].Balance <= Amount) {
+    const balance = parseFloat(cardDetails[0].Balance); // Convert string to number
+    const withdrawalAmount = parseFloat(Amount); // Convert string to number
+
+
+    if (balance < withdrawalAmount) {
       return res.status(400).json({
         success: false,
         message: `Insufficient balance for withdrawal.`,
